@@ -17,15 +17,15 @@ void main(List<String> args) async {
 
   print('There are $result safe reports');
 
-  // final int result2 = elements.fold(
-  //   0,
-  //   ((previousValue, element) =>
-  //       element.isOverlap() ? previousValue + 1 : previousValue),
-  // );
+  final int result2 = reports.fold(
+    0,
+    ((previousValue, element) =>
+        element.isSafeDampenerProblem ? previousValue + 1 : previousValue),
+  );
 
-  // print(
-  //   'There are',
-  // );
+  print(
+    'There are $result2 safe reports, considering Dampener Problem',
+  );
 }
 
 List<Report> parseData(String rawContent) => rawContent
@@ -54,6 +54,16 @@ class Report {
     }
 
     return true;
+  }
+
+  bool get isSafeDampenerProblem {
+    if (isSafe == 0) return true;
+
+    for (int i = 0; i < levels.length; i++) {
+      if (Report(List.of(levels)..removeAt(i)).isSafe) return true;
+    }
+
+    return false;
   }
 }
 
