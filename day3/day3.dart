@@ -16,4 +16,16 @@ void main(List<String> args) async {
       result += int.parse(match.group(1)!) * int.parse(match.group(2)!));
 
   print('First half result : $result');
+
+  final RegExp regexpDont = RegExp(r'''don't\(\).*?(do\(\)|$)''');
+
+  final String contentDo = rawContent.replaceAll(regexpDont, '');
+
+  final Iterable<RegExpMatch> matchesDo = regexp.allMatches(contentDo);
+
+  int result2 = 0;
+  matchesDo.forEach((RegExpMatch match) =>
+      result2 += int.parse(match.group(1)!) * int.parse(match.group(2)!));
+
+  print('Second half result : $result2');
 }
