@@ -13,9 +13,11 @@ void main(List<String> args) async {
   final List<String> xmasLetters = 'XMAS'.split('');
 
   int xmasOccurrences = 0;
+  int crossMasOccurences = 0;
 
   for (int i = 0; i < grid.length; i++) {
     for (int j = 0; j < grid.first.length; j++) {
+      // First half - xmas detection
       if (grid[i][j] == xmasLetters.first) {
         for (wordDirection direction in wordDirection.values) {
           if (isWrittenInGivenDirection(grid, i, j, xmasLetters, direction)) {
@@ -23,11 +25,20 @@ void main(List<String> args) async {
           }
         }
       }
+
+      // Second half - cross mas direction
+      if (grid[i][j] == 'A' && isMasWrittenInCross(grid, i, j)) {
+        crossMasOccurences++;
+      }
     }
   }
 
   print(
     'There are $xmasOccurrences ocurrences of the word XMAS',
+  );
+
+  print(
+    'There are $crossMasOccurences ocurrences of the word MAS in cross',
   );
 }
 
@@ -45,6 +56,20 @@ bool isWrittenInGivenDirection(List<List<String>> grid, int i, int j,
   return true;
 }
 
+bool isMasWrittenInCross(List<List<String>> grid, int i, int j) {
+  final List<String> word = 'MAS'.split('');
+
+  int count = 0;
+  for (wordDirection direction in wordDirection.allDiagonals) {
+    if (isWrittenInGivenDirection(grid, i - direction.verticalModificator,
+        j - direction.horizontalModificator, word, direction)) {
+      count++;
+    }
+  }
+
+  return count >= 2;
+}
+
 enum wordDirection {
   up,
   down,
@@ -54,6 +79,9 @@ enum wordDirection {
   upLeft,
   downRight,
   downLeft;
+
+  static List<wordDirection> get allDiagonals =>
+      <wordDirection>[upRight, upLeft, downRight, downLeft];
 
   int get horizontalModificator => switch (this) {
         wordDirection.up || wordDirection.down => 0,
